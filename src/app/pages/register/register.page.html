@@ -1,0 +1,28 @@
+
+<ion-content [fullscreen]="true">
+  <div class="justfity-text">
+    <h1>Registro</h1>
+  </div>
+
+  <form [formGroup]="registerForm" (ngSubmit)="register()">
+    <ion-item>
+      <ion-input
+        label="email"
+        type="email"
+        name="email"
+        formControlName="email"
+      />
+    </ion-item>
+
+    <ion-item>
+      <ion-input
+        label="password"
+        type="password"
+        name="password"
+        formControlName="password"
+      />
+    </ion-item>
+
+    <ion-button expand="block" type="submit">Registrarse</ion-button>
+  </form>
+</ion-content>

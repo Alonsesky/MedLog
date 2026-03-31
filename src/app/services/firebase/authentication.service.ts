@@ -5,7 +5,7 @@ import { Auth, createUserWithEmailAndPassword } from '@angular/fire/auth';
   providedIn: 'root',
 })
 export class AuthenticationService {
-  
+
   auth: Auth = inject(Auth);
 
   constructor() { }
@@ -14,6 +14,6 @@ export class AuthenticationService {
     const user = await createUserWithEmailAndPassword(this.auth, email, password);
     return user;
   }
-  
+
 
 }
