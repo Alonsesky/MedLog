@@ -2,6 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IonContent, IonItem, IonButton, IonInput } from '@ionic/angular/standalone';
+import { AuthenticationService } from 'src/app/services/firebase/authentication.service';
 
 @Component({
   selector: 'app-register',
@@ -21,9 +22,10 @@ import { IonContent, IonItem, IonButton, IonInput } from '@ionic/angular/standal
 export class RegisterPage implements OnInit {
 
   private formBuilder: FormBuilder = inject(FormBuilder);
+  private authenticationService: AuthenticationService = inject(AuthenticationService);
 
   public registerForm = this.formBuilder.group({
-    email: ['', [Validators.required, Validators.email, Validators.minLength(6)]],
+    email: ['', [Validators.required, Validators.email]],
     password: ['',Validators.required],
   });
 
@@ -32,9 +34,14 @@ export class RegisterPage implements OnInit {
   ngOnInit() {
   }
 
-  register(){
+  async register(){
     if(this.registerForm.valid){
-      console.log(this.registerForm.value);
+      try{
+        const user = await this.authenticationService.createUser(this.registerForm.value.email!, this.registerForm.value.password!);
+
+      } catch (error) {
+        console.error('Error registering user:', error);
+      }
     }
   }
 
