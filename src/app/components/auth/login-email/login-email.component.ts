@@ -1,40 +1,41 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
+import { Router } from '@angular/router';
 import {
   IonButton,
   IonInput,
   IonItem,
 } from '@ionic/angular/standalone';
-
 import {
   FormBuilder,
   FormsModule,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+
 import { AuthenticationService } from 'src/app/services/firebase/authentication.service';
 
 @Component({
   selector: 'app-login-email',
   templateUrl: './login-email.component.html',
   styleUrls: ['./login-email.component.scss'],
+  standalone: true,
   imports: [
     IonButton,
     IonItem,
     IonInput,
     FormsModule,
     ReactiveFormsModule,
-  ]
+  ],
 })
-export class LoginEmailComponent  implements OnInit {
+export class LoginEmailComponent implements OnInit {
   private authenticationService = inject(AuthenticationService);
   private formBuilder = inject(FormBuilder);
+  private router = inject(Router);
 
   public formLogin = this.formBuilder.group({
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(6)]],
   });
-
-  constructor() { }
 
   ngOnInit() {}
 
@@ -47,9 +48,10 @@ export class LoginEmailComponent  implements OnInit {
     try {
       const email = this.formLogin.value.email ?? '';
       const password = this.formLogin.value.password ?? '';
-
       const userCredential = await this.authenticationService.login(email, password);
+
       console.log('Login correcto:', userCredential.user);
+      await this.router.navigateByUrl('/home', { replaceUrl: true });
     } catch (error) {
       console.error('Error en login:', error);
     }
@@ -62,5 +64,4 @@ export class LoginEmailComponent  implements OnInit {
       console.error('Error en logout:', error);
     }
   }
-
 }

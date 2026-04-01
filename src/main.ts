@@ -2,18 +2,19 @@ import { bootstrapApplication } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
 import { provideIonicAngular } from '@ionic/angular/standalone';
 
-import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
+import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import {
-  provideFirestore,
   getFirestore,
   initializeFirestore,
   persistentLocalCache,
+  provideFirestore,
 } from '@angular/fire/firestore';
 import {
-  provideAuth,
+  browserPopupRedirectResolver,
   getAuth,
-  initializeAuth,
   indexedDBLocalPersistence,
+  initializeAuth,
+  provideAuth,
 } from '@angular/fire/auth';
 
 import { Capacitor } from '@capacitor/core';
@@ -36,9 +37,17 @@ bootstrapApplication(AppComponent, {
         });
       }
 
-      initializeAuth(app, {
-        persistence: indexedDBLocalPersistence,
-      });
+      initializeAuth(
+        app,
+        Capacitor.isNativePlatform()
+          ? {
+              persistence: indexedDBLocalPersistence,
+            }
+          : {
+              persistence: indexedDBLocalPersistence,
+              popupRedirectResolver: browserPopupRedirectResolver,
+            },
+      );
 
       return app;
     }),
