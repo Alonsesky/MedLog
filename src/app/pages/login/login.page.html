@@ -4,37 +4,44 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="true" class="login-content">
+  <div class="login-wrapper">
+    <ion-card class="login-card">
+      <ion-card-content>
+        <div class="brand-block">
+          <h1>Iniciar sesión</h1>
+          <p>Selecciona un método de acceso</p>
+        </div>
 
-  <form [formGroup]="formLogin">
+        <div class="providers">
+          <ion-button
+            expand="block"
+            class="provider-btn google-btn"
+            fill="clear"
+            (click)="selectProvider('google')"
+          >
+            <ion-icon slot="start" name="logo-google"></ion-icon>
+            Continuar con Google
+          </ion-button>
 
-    <ion-item>
-      <ion-input
-        label="email"
-        type="email"
-        name="email"
-        formControlName="email"
-      />
-    </ion-item>
+          <ion-button
+            expand="block"
+            class="provider-btn email-btn"
+            fill="clear"
+            (click)="selectProvider('email')"
+          >
+            <ion-icon slot="start" name="mail-outline"></ion-icon>
+            Continuar con Email
+          </ion-button>
+        </div>
 
-    <ion-item>
-      <ion-input
-        label="password"
-        type="password"
-        name="password"
-        formControlName="password"
-      />
-    </ion-item>
+        <div class="provider-component" *ngIf="selectedProvider">
+          <app-login-google *ngIf="selectedProvider === 'google'"></app-login-google>
+          <app-login-email *ngIf="selectedProvider === 'email'"></app-login-email>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
 
-    <ion-item>
-      <ion-button (click)="login()">
-        Login
-      </ion-button>
-    </ion-item>
-    <ion-item>
-      <ion-button (click)="logout()">
-        Cerrar sesión
-      </ion-button>
-    </ion-item>
-  </form>
+
 </ion-content>

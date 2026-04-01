@@ -10,11 +10,8 @@ import { FirestoreService } from './services/firebase/firestore-service';
 })
 export class AppComponent {
 
-  firestore: FirestoreService = inject(FirestoreService);
   constructor() {
-    console.log('fire');
 
-    this.firestore.addUser();
   }
 
 

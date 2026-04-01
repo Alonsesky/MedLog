@@ -11,21 +11,27 @@ import {
   IonHeader,
   IonTitle,
   IonToolbar,
-  IonItem,
   IonButton,
-  IonInput,
+  IonCard,
+  IonCardContent,
+  IonIcon
 } from '@ionic/angular/standalone';
+
 import { AuthenticationService } from '../../services/firebase/authentication.service';
+import { logoGoogle, mailOutline } from 'ionicons/icons';
+import { addIcons } from 'ionicons';
+import { LoginGoogleComponent } from "src/app/components/auth/login-google/login-google.component";
+import { LoginEmailComponent } from "src/app/components/auth/login-email/login-email.component";
+
+type ProviderType = 'google' | 'email' | null;
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
   standalone: true,
-  imports: [
+  imports: [IonIcon, IonCardContent, IonCard,
     IonButton,
-    IonItem,
-    IonInput,
     IonContent,
     IonHeader,
     IonTitle,
@@ -33,7 +39,7 @@ import { AuthenticationService } from '../../services/firebase/authentication.se
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-  ],
+    LoginGoogleComponent, LoginEmailComponent],
 })
 export class LoginPage implements OnInit {
   private authenticationService = inject(AuthenticationService);
@@ -45,6 +51,8 @@ export class LoginPage implements OnInit {
   });
 
   constructor() {
+    addIcons({ logoGoogle, mailOutline });
+
     this.authenticationService.authState.subscribe((user:any) => {
       if (user) {
         console.log('User is logged in:', user);
@@ -56,28 +64,14 @@ export class LoginPage implements OnInit {
 
   ngOnInit() {}
 
-  async login() {
-    if (this.formLogin.invalid) {
-      this.formLogin.markAllAsTouched();
-      return;
-    }
 
-    try {
-      const email = this.formLogin.value.email ?? '';
-      const password = this.formLogin.value.password ?? '';
 
-      const userCredential = await this.authenticationService.login(email, password);
-      console.log('Login correcto:', userCredential.user);
-    } catch (error) {
-      console.error('Error en login:', error);
-    }
-  }
+  selectedProvider: ProviderType = null;
 
-  async logout() {
-    try {
-      await this.authenticationService.logout();
-    } catch (error) {
-      console.error('Error en logout:', error);
-    }
+
+
+  selectProvider(provider: ProviderType): void {
+    this.selectedProvider = provider;
   }
 }
+

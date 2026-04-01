@@ -1,0 +1,31 @@
+  <form [formGroup]="formLogin">
+
+  <ion-item>
+    <ion-input
+      label="email"
+      type="email"
+      name="email"
+      formControlName="email"
+    />
+  </ion-item>
+
+  <ion-item>
+    <ion-input
+      label="password"
+      type="password"
+      name="password"
+      formControlName="password"
+    />
+  </ion-item>
+
+  <ion-item>
+    <ion-button (click)="login()">
+      Login
+    </ion-button>
+  </ion-item>
+  <ion-item>
+    <ion-button (click)="logout()">
+      Cerrar sesión
+    </ion-button>
+  </ion-item>
+</form>
