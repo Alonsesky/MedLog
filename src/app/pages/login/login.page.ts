@@ -19,6 +19,7 @@ import { logoGoogle, mailOutline } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
 import { LoginGoogleComponent } from "src/app/components/auth/login-google/login-google.component";
 import { LoginEmailComponent } from "src/app/components/auth/login-email/login-email.component";
+import { Router } from '@angular/router';
 
 type ProviderType = 'google' | 'email' | null;
 
@@ -42,6 +43,7 @@ export class LoginPage implements OnInit {
 
   private authenticationService = inject(AuthenticationService);
   private formBuilder = inject(FormBuilder);
+  private router = inject(Router);
 
   public formLogin = this.formBuilder.group({
     email: ['', [Validators.required, Validators.email]],
@@ -53,6 +55,9 @@ export class LoginPage implements OnInit {
     addIcons({ logoGoogle, mailOutline });
     // Suscripción al estado de autenticación
     this.authenticationService.authState.subscribe((user:any) => {
+      if (user) {
+        this.router.navigateByUrl('/register', { replaceUrl: true });
+      }
     });
 
     // Obtener el usuario actual
