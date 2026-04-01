@@ -82,6 +82,15 @@ export class LoginPage implements OnInit {
     }
   }
 
+  async loginGoogle(){
+    try {
+      const result = await this.authenticationService.loginWithGoogle();
+      console.log('Login Google correcto:', result.user);
+      await this.router.navigateByUrl('/home', { replaceUrl: true });
+    } catch (error) {
+      console.error('Error en login con Google:', error);
+    }
+  }
 
 }
 
