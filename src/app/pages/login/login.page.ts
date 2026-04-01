@@ -8,9 +8,6 @@ import {
 } from '@angular/forms';
 import {
   IonContent,
-  IonHeader,
-  IonTitle,
-  IonToolbar,
   IonButton,
   IonCard,
   IonCardContent,
@@ -30,18 +27,19 @@ type ProviderType = 'google' | 'email' | null;
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
   standalone: true,
-  imports: [IonIcon, IonCardContent, IonCard,
+  imports: [
+    IonIcon,
+    IonCardContent,
+    IonCard,
     IonButton,
     IonContent,
-    IonHeader,
-    IonTitle,
-    IonToolbar,
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
     LoginGoogleComponent, LoginEmailComponent],
 })
 export class LoginPage implements OnInit {
+
   private authenticationService = inject(AuthenticationService);
   private formBuilder = inject(FormBuilder);
 
@@ -51,27 +49,34 @@ export class LoginPage implements OnInit {
   });
 
   constructor() {
+    // Iconos de proveedores de autenticación
     addIcons({ logoGoogle, mailOutline });
-
+    // Suscripción al estado de autenticación
     this.authenticationService.authState.subscribe((user:any) => {
-      if (user) {
-        console.log('User is logged in:', user);
-      } else {
-        console.log('User is not logged in');
-      }
     });
+
+    // Obtener el usuario actual
+    const user = this.authenticationService.getCurrentUser();
+
+
   }
 
   ngOnInit() {}
 
 
-
+  // Variable para almacenar el proveedor de autenticación seleccionado
   selectedProvider: ProviderType = null;
-
-
-
+  // Seleccion del proveedor de autenticación
   selectProvider(provider: ProviderType): void {
     this.selectedProvider = provider;
+
+    if (this.selectedProvider === 'google') {
+      console.log('Google seleccionado');
+    } else if (this.selectedProvider === 'email') {
+      console.log('Email seleccionado');
+    }
   }
+
+
 }
 

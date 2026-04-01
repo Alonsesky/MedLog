@@ -25,6 +25,8 @@ export class AuthenticationService {
     await signOut(this.auth);
   }
 
-
+  getCurrentUser(){
+    return this.auth.currentUser;
+  }
 
 }
