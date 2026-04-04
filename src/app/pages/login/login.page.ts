@@ -15,6 +15,7 @@ import { logoGoogle, mailOutline } from 'ionicons/icons';
 import { LoginEmailComponent } from 'src/app/components/auth/login-email/login-email.component';
 import { LoginGoogleComponent } from 'src/app/components/auth/login-google/login-google.component';
 import { AuthenticationService } from '../../services/firebase/authentication.service';
+import { UserProfileService } from '../../services/firebase/user-profile.service';
 
 type ProviderType = 'google' | 'email' | null;
 
@@ -36,9 +37,12 @@ type ProviderType = 'google' | 'email' | null;
     LoginEmailComponent,
   ],
 })
+
+
 export class LoginPage implements OnInit {
   private authenticationService = inject(AuthenticationService);
   private router = inject(Router);
+  private UserProfileService = inject(UserProfileService);
 
   selectedProvider: ProviderType = null;
 
@@ -62,10 +66,13 @@ export class LoginPage implements OnInit {
     try {
       const result = await this.authenticationService.loginWithGoogle();
 
-      if (result?.user) {
-        console.log('Login Google correcto:', result.user);
-        await this.router.navigateByUrl('/home', { replaceUrl: true });
-      }
+      const profile = this.UserProfileService.mapUser(result.user);
+
+      await this.UserProfileService.saveUserProfile(profile);
+
+      console.log('Login Google correcto:', result.user);
+      await this.router.navigateByUrl('/home', { replaceUrl: true });
+
     } catch (error) {
       console.error('Error en login con Google:', error);
     }

@@ -4,6 +4,7 @@ import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angu
 import { IonContent, IonItem, IonButton, IonInput } from '@ionic/angular/standalone';
 import { AuthenticationService } from 'src/app/services/firebase/authentication.service';
 import { Router } from '@angular/router';
+import { UserProfileService } from 'src/app/services/firebase/user-profile.service';
 
 @Component({
   selector: 'app-register',
@@ -25,6 +26,7 @@ export class RegisterPage implements OnInit {
   private formBuilder: FormBuilder = inject(FormBuilder);
   private authenticationService: AuthenticationService = inject(AuthenticationService);
   private router = inject(Router);
+  private userProfileService = inject(UserProfileService);
 
   public registerForm = this.formBuilder.group({
     email: ['', [Validators.required, Validators.email]],
@@ -36,16 +38,22 @@ export class RegisterPage implements OnInit {
   ngOnInit() {
   }
 
-  async register(){
-    if(this.registerForm.valid){
-      try{
-        const user = await this.authenticationService.createUser(this.registerForm.value.email!, this.registerForm.value.password!);
+  async register() {
+  if (this.registerForm.valid) {
+    try {
+      const userCredential = await this.authenticationService.createUser(
+        this.registerForm.value.email!,
+        this.registerForm.value.password!
+      );
 
-      } catch (error) {
-        console.error('Error registering user:', error);
-      }
+      await this.userProfileService.saveUserProfile(userCredential.user);
+
+      await this.router.navigateByUrl('/home', { replaceUrl: true });
+    } catch (error) {
+      console.error('Error registering user:', error);
     }
   }
+}
 
   async logout() {
     try {
