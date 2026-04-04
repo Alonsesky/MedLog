@@ -42,14 +42,14 @@ type ProviderType = 'google' | 'email' | null;
 export class LoginPage implements OnInit {
   private authenticationService = inject(AuthenticationService);
   private router = inject(Router);
-  private UserProfileService = inject(UserProfileService);
+  private userProfileService = inject(UserProfileService);
 
   selectedProvider: ProviderType = null;
 
   constructor() {
     addIcons({ logoGoogle, mailOutline });
 
-    this.authenticationService.authState.subscribe((user: any) => {
+    this.authenticationService.authState.subscribe((user) => {
       if (user) {
         this.router.navigateByUrl('/home', { replaceUrl: true });
       }
@@ -66,9 +66,9 @@ export class LoginPage implements OnInit {
     try {
       const result = await this.authenticationService.loginWithGoogle();
 
-      const profile = this.UserProfileService.mapUser(result.user);
+      const profile = this.userProfileService.mapUser(result.user);
 
-      await this.UserProfileService.saveUserProfile(profile);
+      await this.userProfileService.saveUserProfile(profile);
 
       console.log('Login Google correcto:', result.user);
       await this.router.navigateByUrl('/home', { replaceUrl: true });

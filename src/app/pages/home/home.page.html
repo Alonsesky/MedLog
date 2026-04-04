@@ -1,11 +1,28 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>
-      Blank
-    </ion-title>
+    <ion-title>MedLog</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="logout()">Cerrar sesion</ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-button routerLink="/register">Ir a registro</ion-button>
+  <div id="container" *ngIf="currentUser$ | async as user">
+    <strong>{{ user.displayName || user.email }}</strong>
+    <p>Rol actual: {{ user.role }}</p>
+    <p>Email: {{ user.email }}</p>
+
+    <ion-button routerLink="/patient" *ngIf="canAccessPatient$ | async">
+      Portal paciente
+    </ion-button>
+
+    <ion-button routerLink="/medic" *ngIf="canAccessMedic$ | async">
+      Portal medico
+    </ion-button>
+
+    <ion-button routerLink="/admin" *ngIf="isAdmin$ | async">
+      Panel admin
+    </ion-button>
+  </div>
 </ion-content>

@@ -48,9 +48,8 @@ export class LoginEmailComponent implements OnInit {
     try {
       const email = this.formLogin.value.email ?? '';
       const password = this.formLogin.value.password ?? '';
-      const userCredential = await this.authenticationService.login(email, password);
+      await this.authenticationService.login(email, password);
 
-      console.log('Login correcto:', userCredential.user);
       await this.router.navigateByUrl('/home', { replaceUrl: true });
     } catch (error) {
       console.error('Error en login:', error);

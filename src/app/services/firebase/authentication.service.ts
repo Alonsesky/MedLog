@@ -1,13 +1,38 @@
 import { inject, Injectable } from '@angular/core';
-import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, authState, GoogleAuthProvider, signInWithPopup } from '@angular/fire/auth';
+import {
+  Auth,
+  GoogleAuthProvider,
+  authState,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  signOut,
+  user,
+} from '@angular/fire/auth';
+import { Firestore, doc, docData } from '@angular/fire/firestore';
+import { Observable, of, switchMap } from 'rxjs';
+import { UserModel } from 'src/app/shared/models/user.model';
+import { UserRole } from 'src/app/shared/models/userRole.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthenticationService {
 
-  auth: Auth = inject(Auth);
-  authState: any = authState(this.auth);
+  private auth: Auth = inject(Auth);
+  private firestore = inject(Firestore);
+
+  authState = authState(this.auth);
+  currentUser$: Observable<UserModel | null> = user(this.auth).pipe(
+    switchMap((firebaseUser) => {
+      if (!firebaseUser) {
+        return of(null);
+      }
+
+      const userRef = doc(this.firestore, `users/${firebaseUser.uid}`);
+      return docData(userRef, { idField: 'uid' }) as Observable<UserModel | null>;
+    }),
+  );
 
   constructor() { }
 
@@ -27,6 +52,17 @@ export class AuthenticationService {
 
   getCurrentUser(){
     return this.auth.currentUser;
+  }
+
+  async getUserRole(): Promise<UserRole | null> {
+    const currentUser = this.auth.currentUser;
+
+    if (!currentUser) {
+      return null;
+    }
+
+    const tokenResult = await currentUser.getIdTokenResult(true);
+    return (tokenResult.claims['role'] as UserRole | undefined) ?? null;
   }
 
   async loginWithGoogle() {

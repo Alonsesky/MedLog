@@ -39,21 +39,22 @@ export class RegisterPage implements OnInit {
   }
 
   async register() {
-  if (this.registerForm.valid) {
-    try {
-      const userCredential = await this.authenticationService.createUser(
-        this.registerForm.value.email!,
-        this.registerForm.value.password!
-      );
+    if (this.registerForm.valid) {
+      try {
+        const userCredential = await this.authenticationService.createUser(
+          this.registerForm.value.email!,
+          this.registerForm.value.password!,
+        );
 
-      await this.userProfileService.saveUserProfile(userCredential.user);
+        const profile = this.userProfileService.mapUser(userCredential.user);
+        await this.userProfileService.saveUserProfile(profile);
 
-      await this.router.navigateByUrl('/home', { replaceUrl: true });
-    } catch (error) {
-      console.error('Error registering user:', error);
+        await this.router.navigateByUrl('/home', { replaceUrl: true });
+      } catch (error) {
+        console.error('Error registering user:', error);
+      }
     }
   }
-}
 
   async logout() {
     try {
