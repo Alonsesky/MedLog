@@ -1,22 +1,21 @@
-import { Component } from '@angular/core';
-import { IonButton, IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/angular/standalone';
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { IonContent, IonHeader, IonTitle, IonToolbar, IonButton } from '@ionic/angular/standalone';
 import { RouterLink } from '@angular/router';
-
+import { IonTabComponent } from '../../shared/components/ion-tab/ion-tab/ion-tab.component';
 @Component({
   selector: 'app-medic',
+  templateUrl: './medic.page.html',
+  styleUrls: ['./medic.page.scss'],
   standalone: true,
-  imports: [IonButton, IonContent, IonHeader, IonTitle, IonToolbar, RouterLink],
-  template: `
-    <ion-header>
-      <ion-toolbar>
-        <ion-title>Portal Medico</ion-title>
-      </ion-toolbar>
-    </ion-header>
-
-    <ion-content class="ion-padding">
-      <p>Esta ruta permite admin y medic.</p>
-      <ion-button routerLink="/home">Volver a home</ion-button>
-    </ion-content>
-  `,
+  imports: [IonButton, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, RouterLink, IonTabComponent]
 })
-export class MedicPage {}
+export class MedicPage implements OnInit {
+
+  constructor() { }
+
+  ngOnInit() {
+  }
+
+}

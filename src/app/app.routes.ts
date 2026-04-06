@@ -51,5 +51,9 @@ export const routes: Routes = [
     path: 'login',
     canActivate: [publicGuard],
     loadComponent: () => import('./pages/login/login.page').then( m => m.LoginPage),
+  },
+  {
+    path: 'medic',
+    loadComponent: () => import('./pages/medic/medic.page').then( m => m.MedicPage)
   }
 ];
