@@ -1,3 +1,65 @@
-<p>
-  register-medical works!
-</p>
+<form [formGroup]="form" (ngSubmit)="accept()">
+    <ion-grid>
+      <ion-row>
+        <ion-col size="12">
+          <ion-item>
+            <ion-input label="Nombre Paciente:"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col size="12">
+          <ion-item>
+            <ion-input label="Nombre Profesional:"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="ion-justify-content-center">
+        <ion-col size="auto">
+          <ion-datetime
+            presentation="date"
+            formControlName="date">
+          </ion-datetime>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col size="12">
+          <ion-textarea
+            placeholder="Evolución del paciente"
+            fill="outline"
+            rows="6"
+            autoGrow="true"
+            formControlName="evolucion">
+          </ion-textarea>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col size="6">
+          <ion-button
+            type="button"
+            (click)="cancel()"
+            color="danger"
+            expand="block"
+            shape="round">
+            Cancelar
+          </ion-button>
+        </ion-col>
+
+        <ion-col size="6">
+          <ion-button
+            type="submit"
+            color="success"
+            expand="block"
+            shape="round"
+            [disabled]="form.invalid">
+            Registrar
+          </ion-button>
+        </ion-col>
+      </ion-row>
+
+    </ion-grid>
+  </form>
