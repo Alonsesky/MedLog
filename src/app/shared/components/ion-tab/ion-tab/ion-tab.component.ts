@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { IonIcon, IonFabButton, IonFabList, IonFab } from "@ionic/angular/standalone";
 import { addIcons } from 'ionicons';
-import { add, addOutline, createOutline } from 'ionicons/icons';
+import { add, addOutline, createOutline, listOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-ion-tab',
@@ -12,7 +12,7 @@ import { add, addOutline, createOutline } from 'ionicons/icons';
 export class IonTabComponent  implements OnInit {
 
   constructor() {
-     addIcons({ add, addOutline});
+     addIcons({ add, addOutline, listOutline});
    }
 
   ngOnInit() {}
