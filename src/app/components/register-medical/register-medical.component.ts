@@ -1,13 +1,22 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { IonButton, IonRow, IonCol, IonGrid, IonInput, IonItem, IonTextarea } from "@ionic/angular/standalone";
+import { IonButton, IonRow, IonCol, IonGrid, IonInput, IonItem, IonTextarea, IonDatetime } from '@ionic/angular/standalone';
 
 @Component({
   selector: 'app-register-medical',
   templateUrl: './register-medical.component.html',
   styleUrls: ['./register-medical.component.scss'],
-  imports: [IonItem, IonInput, IonGrid, IonCol, IonRow, IonButton, ReactiveFormsModule, IonTextarea]
+  imports: [
+    IonItem,
+    IonInput,
+    IonGrid,
+    IonCol,
+    IonRow,
+    IonButton,
+    ReactiveFormsModule,
+    IonTextarea,
+    IonDatetime]
 })
 export class RegisterMedicalComponent  implements OnInit {
 
@@ -15,6 +24,8 @@ export class RegisterMedicalComponent  implements OnInit {
   private router = inject(Router);
 
   form =this.fb.group({
+  namePatient: ['', [Validators.required, Validators.minLength(3)]],
+  nameProfessional: ['', [Validators.required, Validators.minLength(3)]],
   date: ['',Validators.required],
   evolucion: ['', [Validators.required,Validators.minLength(3)]],
   });
@@ -26,12 +37,14 @@ export class RegisterMedicalComponent  implements OnInit {
 
   accept() {
   if (this.form.invalid) {
-  this.form.markAllAsTouched();
-  return;
-    }
+    this.form.markAllAsTouched();
+    return;
+  }
 
-  const { date, evolucion } =this.form.value;
+  const { date, evolucion, namePatient, nameProfessional } =this.form.value;
 
+  console.log('Nombre del paciente:', namePatient);
+  console.log('Nombre del profesional:', nameProfessional);
   console.log('Fecha:', date);
   console.log('Evolución:', evolucion);
 
