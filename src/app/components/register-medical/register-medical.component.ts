@@ -24,6 +24,7 @@ export class RegisterMedicalComponent  implements OnInit {
   private router = inject(Router);
 
   form =this.fb.group({
+  emailPatient: ['', [Validators.required, Validators.email]],
   namePatient: ['', [Validators.required, Validators.minLength(3)]],
   nameProfessional: ['', [Validators.required, Validators.minLength(3)]],
   date: ['',Validators.required],
@@ -41,12 +42,13 @@ export class RegisterMedicalComponent  implements OnInit {
     return;
   }
 
-  const { date, evolucion, namePatient, nameProfessional } =this.form.value;
+  const { date, evolucion, namePatient, nameProfessional, emailPatient } =this.form.value;
 
   console.log('Nombre del paciente:', namePatient);
   console.log('Nombre del profesional:', nameProfessional);
   console.log('Fecha:', date);
   console.log('Evolución:', evolucion);
+  console.log('Email del paciente:',emailPatient);
 
   // aquí llamas API / guardas en BD
   }
