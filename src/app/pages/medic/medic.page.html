@@ -6,9 +6,16 @@
 </ion-header>
 
 <ion-content class="ion-padding">
-  <h1 class="ion-text-center">Ficha Clínica</h1>
+  <!--Titulo según el componente-->
+  @if(showList)
+  {
+    <h1 class="ion-text-center">Historial Clínico</h1>
+  }
+  @else{
+    <h1 class="ion-text-center">Registro Clínico</h1>
+  }
 
-  <!--Seccion de interfaz de componentes medical register - List-->
+  <!--Seccion de interfaz de componentes (List-medical - Register-medical)-->
   <section>
     @if(showList)
     {
