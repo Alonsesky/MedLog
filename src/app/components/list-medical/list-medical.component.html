@@ -17,28 +17,82 @@
 
           <ion-card-content>
 
-            <div class="card-content">
+            @if (editingId === item.id) {
+              <form [formGroup]="form" (ngSubmit)="confirmUpdate(item.id!)" class="edit-form">
+                <ion-item>
+                  <ion-input
+                    label="Email Paciente:"
+                    formControlName="emailPatient">
+                  </ion-input>
+                </ion-item>
 
-              <div class="info">
-                <p>Observaciones: {{ item.evolution }}</p>
-                <p>Profesional: {{ item.nameProfessional }}</p>
+                <ion-item>
+                  <ion-input
+                    label="Nombre Paciente:"
+                    formControlName="namePatient">
+                  </ion-input>
+                </ion-item>
+
+                <ion-item>
+                  <ion-input
+                    label="Nombre Profesional:"
+                    formControlName="nameProfessional">
+                  </ion-input>
+                </ion-item>
+
+                <ion-datetime
+                  presentation="date"
+                  formControlName="date">
+                </ion-datetime>
+
+                <ion-textarea
+                  placeholder="Evolución del paciente"
+                  fill="outline"
+                  rows="6"
+                  autoGrow="true"
+                  formControlName="evolution">
+                </ion-textarea>
+
+                <div class="actions edit-actions">
+                  <ion-button
+                    type="button"
+                    color="medium"
+                    (click)="cancelEdit()">
+                    Cancelar
+                  </ion-button>
+
+                  <ion-button
+                    type="submit"
+                    color="success"
+                    [disabled]="form.invalid || isSaving">
+                    Confirmar
+                  </ion-button>
+                </div>
+              </form>
+            } @else {
+              <div class="card-content">
+
+                <div class="info">
+                  <p>Observaciones: {{ item.evolution }}</p>
+                  <p>Profesional: {{ item.nameProfessional }}</p>
+                </div>
+
+                <div class="actions">
+                  <ion-button
+                    color="danger"
+                    (click)="delete(item.id!)">
+                    Eliminar
+                  </ion-button>
+
+                  <ion-button
+                    color="warning"
+                    (click)="update(item)">
+                    Editar
+                  </ion-button>
+                </div>
+
               </div>
-
-              <div class="actions">
-                <ion-button
-                  color="danger"
-                  (click)="delete(item.id!)">
-                  Eliminar
-                </ion-button>
-
-                <ion-button
-                  color="warning"
-                  (click)="update(item.id!)">
-                  Editar
-                </ion-button>
-              </div>
-
-            </div>
+            }
 
           </ion-card-content>
 
