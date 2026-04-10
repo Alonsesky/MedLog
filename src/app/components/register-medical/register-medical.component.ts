@@ -1,7 +1,11 @@
 import { Component, inject, OnInit } from '@angular/core';
+import { Auth, authState, user } from '@angular/fire/auth';
 import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { IonButton, IonRow, IonCol, IonGrid, IonInput, IonItem, IonTextarea, IonDatetime } from '@ionic/angular/standalone';
+import { firstValueFrom } from 'rxjs';
+import { EvolutionService } from 'src/app/services/firebase/evolution.service';
+import { Evolution } from 'src/app/shared/models/evolution.model';
 
 @Component({
   selector: 'app-register-medical',
@@ -21,41 +25,68 @@ import { IonButton, IonRow, IonCol, IonGrid, IonInput, IonItem, IonTextarea, Ion
 export class RegisterMedicalComponent  implements OnInit {
 
   private fb = inject(FormBuilder);
-  private router = inject(Router);
+  private evolutionService = inject(EvolutionService);
+  private auth = inject(Auth);
 
   form =this.fb.group({
-  emailPatient: ['', [Validators.required, Validators.email]],
-  namePatient: ['', [Validators.required, Validators.minLength(3)]],
-  nameProfessional: ['', [Validators.required, Validators.minLength(3)]],
-  date: ['',Validators.required],
-  evolucion: ['', [Validators.required,Validators.minLength(3)]],
+    emailPatient: ['', [Validators.required, Validators.email]],
+    namePatient: ['', [Validators.required, Validators.minLength(3)]],
+    nameProfessional: ['', [Validators.required, Validators.minLength(3)]],
+    date: ['',Validators.required],
+    evolution: ['', [Validators.required,Validators.minLength(3)]],
   });
 
 
-  constructor() { }
+  constructor(private router: Router) {}
 
   ngOnInit() {}
 
-  accept() {
-  if (this.form.invalid) {
-    this.form.markAllAsTouched();
-    return;
-  }
+  async accept() {
+    // Validar el formulario
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
 
-  const { date, evolucion, namePatient, nameProfessional, emailPatient } =this.form.value;
+    // Obtener el usuario autenticado
+    const user = await firstValueFrom(authState(this.auth));
+    // Verificar si el usuario está autenticado
+    if (!user) {
+      console.error('Usuario no autenticado');
+      return;
+    }
+    // Preparar los datos para guardar
+    const { date, evolution, namePatient, nameProfessional, emailPatient } =this.form.value;
+    // Crear el objeto de datos a guardar
+    const data: Evolution = {
+      date:date!,
+      evolution:evolution!,
+      namePatient: namePatient!,
+      nameProfessional: nameProfessional!,
+      emailPatient: emailPatient!,
+      userId: user.uid,
+      createdAt: new Date(),
+    };
 
-  console.log('Nombre del paciente:', namePatient);
-  console.log('Nombre del profesional:', nameProfessional);
-  console.log('Fecha:', date);
-  console.log('Evolución:', evolucion);
-  console.log('Email del paciente:',emailPatient);
+   // Guardar la evolución en Firebase
+    try {
 
-  // aquí llamas API / guardas en BD
+      await this.evolutionService.saveEvolution(data);
+
+      console.log('Guardado correctamente');
+
+      this.form.reset();
+
+    } catch (error) {
+
+      console.error('Error al guardar', error);
+
+    }
   }
 
   cancel(){
     this.form.reset();
-    this.router.navigate(['/home'])
+    this.router.navigate(['/home']);
   }
 
 }

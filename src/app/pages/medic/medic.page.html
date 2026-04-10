@@ -6,14 +6,22 @@
 </ion-header>
 
 <ion-content class="ion-padding">
-  <p>Esta ruta permite admin y medic.</p>
-  <ion-button routerLink="/home">Volver a home</ion-button>
+  <h1 class="ion-text-center">Ficha Clínica</h1>
 
+  <!--Seccion de interfaz de componentes medical register - List-->
+  <section>
+    @if(showList)
+    {
+      <app-list-medical/>
+    }
+    @else
+    {
+      <app-register-medical/>
+    }
+  </section>
   <!--Boton de opciones-->
-  <app-ion-tab/>
+  <app-ion-tab class="ion-tab" (changeView)="changeView($event)"/>
 
 </ion-content>
-
-
 
 

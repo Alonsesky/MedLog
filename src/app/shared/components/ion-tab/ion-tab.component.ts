@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { IonIcon, IonFabButton, IonFabList, IonFab } from "@ionic/angular/standalone";
 import { addIcons } from 'ionicons';
 import { add, addOutline, createOutline, listOutline } from 'ionicons/icons';
@@ -16,5 +16,15 @@ export class IonTabComponent  implements OnInit {
    }
 
   ngOnInit() {}
+
+  @Output() changeView = new EventEmitter<boolean>();
+
+  showListComponent(){
+    this.changeView.emit(true);
+  }
+
+  showRegisterComponent(){
+    this.changeView.emit(false);
+  }
 
 }
