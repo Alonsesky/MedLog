@@ -6,6 +6,7 @@ import { IonButton, IonRow, IonCol, IonGrid, IonInput, IonItem, IonTextarea, Ion
 import { firstValueFrom } from 'rxjs';
 import { EvolutionService } from 'src/app/services/firebase/evolution.service';
 import { Evolution } from 'src/app/shared/models/evolution.model';
+import { ToastService } from 'src/app/shared/service/toastService';
 
 @Component({
   selector: 'app-register-medical',
@@ -27,6 +28,7 @@ export class RegisterMedicalComponent  implements OnInit {
   private fb = inject(FormBuilder);
   private evolutionService = inject(EvolutionService);
   private auth = inject(Auth);
+  private toastService = inject(ToastService);
 
   form =this.fb.group({
     emailPatient: ['', [Validators.required, Validators.email]],
@@ -72,15 +74,12 @@ export class RegisterMedicalComponent  implements OnInit {
     try {
 
       await this.evolutionService.saveEvolution(data);
-
-      console.log('Guardado correctamente');
+      await this.toastService.showToast('Guardado correctamente');
 
       this.form.reset();
 
     } catch (error) {
-
-      console.error('Error al guardar', error);
-
+      await this.toastService.showToast(`Error al guardar: ${error}`, 3000, 'top');
     }
   }
 

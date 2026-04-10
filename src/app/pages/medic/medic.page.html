@@ -1,7 +1,12 @@
 
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar class="toolbar-centered">
     <ion-title>Portal Medico</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="logOut()">
+        <ion-icon name="log-out-outline" size="large"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 

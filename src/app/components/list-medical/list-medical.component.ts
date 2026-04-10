@@ -5,6 +5,7 @@ import { firstValueFrom } from 'rxjs';
 import { EvolutionService } from 'src/app/services/firebase/evolution.service';
 import { Evolution } from 'src/app/shared/models/evolution.model';
 import { CommonModule } from '@angular/common';
+import { ToastService } from '../../shared/service/toastService';
 import {
   IonGrid,
   IonRow,
@@ -47,6 +48,7 @@ export class ListMedicalComponent  implements OnInit {
 
   private fb = inject(FormBuilder);
   private evolutionService = inject(EvolutionService);
+  private toastService = inject(ToastService);
   evolutions: Evolution[] = [];
   editingId: string | null = null;
   isSaving = false;
@@ -80,8 +82,8 @@ export class ListMedicalComponent  implements OnInit {
   delete(id: string) {
 
     this.evolutionService.deleteById(id)
-      .then(() => console.log('Eliminado'))
-      .catch(err => console.error(err));
+      .then(() => this.toastService.showToast('Eliminado exitosamente!'))
+      .catch(err => this.toastService.showToast(`Error al eliminar ${err.message}`));
 
   }
 
@@ -112,11 +114,12 @@ export class ListMedicalComponent  implements OnInit {
 
     try {
       await this.evolutionService.UpdateById(id, this.form.getRawValue() as Partial<Evolution>);
+      this.toastService.showToast('Actualizado exitosamente!');
       this.cancelEdit();
-      console.log('Actualizado correctamente');
+
     } catch (err) {
       this.isSaving = false;
-      console.error(err);
+      this.toastService.showToast(`Error al actualizar: ${err}`);
     }
 
   }
