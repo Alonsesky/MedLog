@@ -12,6 +12,7 @@ import { ToastService } from 'src/app/shared/service/toastService';
   selector: 'app-register-medical',
   templateUrl: './register-medical.component.html',
   styleUrls: ['./register-medical.component.scss'],
+  standalone: true,
   imports: [
     IonItem,
     IonInput,
@@ -59,13 +60,17 @@ export class RegisterMedicalComponent  implements OnInit {
     }
     // Preparar los datos para guardar
     const { date, evolution, namePatient, nameProfessional, emailPatient } =this.form.value;
+    const normalizedEmailPatient = emailPatient?.trim();
+    // Obtener el paciente por email
+    const patient = await this.evolutionService.getPatientByEmail(normalizedEmailPatient!);
     // Crear el objeto de datos a guardar
     const data: Evolution = {
       date:date!,
       evolution:evolution!,
       namePatient: namePatient!,
       nameProfessional: nameProfessional!,
-      emailPatient: emailPatient!,
+      emailPatient: normalizedEmailPatient!,
+      patientId: patient.uid,
       userId: user.uid,
       createdAt: new Date(),
     };

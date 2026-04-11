@@ -7,5 +7,6 @@ export interface Evolution {
   nameProfessional: string;
   emailPatient: string;
   userId: string;
+  patientId: string;
   createdAt: Date;
 }

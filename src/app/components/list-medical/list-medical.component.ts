@@ -1,7 +1,8 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Auth, authState } from '@angular/fire/auth';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { firstValueFrom } from 'rxjs';
+import { of, switchMap } from 'rxjs';
 import { EvolutionService } from 'src/app/services/firebase/evolution.service';
 import { Evolution } from 'src/app/shared/models/evolution.model';
 import { CommonModule } from '@angular/common';
@@ -26,6 +27,7 @@ import {
   selector: 'app-list-medical',
   templateUrl: './list-medical.component.html',
   styleUrls: ['./list-medical.component.scss'],
+  standalone: true,
   imports: [
     IonCardSubtitle,
     IonButton,
@@ -49,6 +51,8 @@ export class ListMedicalComponent  implements OnInit {
   private fb = inject(FormBuilder);
   private evolutionService = inject(EvolutionService);
   private toastService = inject(ToastService);
+  private auth = inject(Auth);
+  private destroyRef = inject(DestroyRef);
   evolutions: Evolution[] = [];
   editingId: string | null = null;
   isSaving = false;
@@ -61,19 +65,15 @@ export class ListMedicalComponent  implements OnInit {
     evolution: ['', [Validators.required, Validators.minLength(3)]],
   });
 
-  constructor(
-    private auth: Auth
-  ) {}
+  constructor() {}
 
   async ngOnInit() {
-
-    const user = await firstValueFrom(authState(this.auth));
-
-    if (!user) return;
-
-    this.evolutionService
-      .getByUserId(user.uid)
-      .subscribe(data => {
+    authState(this.auth)
+      .pipe(
+        switchMap((user) => user ? this.evolutionService.getByUserId(user.uid) : of([])),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe((data) => {
         this.evolutions = data;
       });
 

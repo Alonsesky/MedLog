@@ -1,0 +1,18 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>patient</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-card *ngFor="let evo of evolutions$ | async">
+    <ion-card-header>
+      <ion-card-title>{{evo.nameProfessional}}</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+      <p>{{evo.evolution}}</p>
+      <small>{{evo.date}}</small>
+    </ion-card-content>
+  </ion-card>
+</ion-content>
