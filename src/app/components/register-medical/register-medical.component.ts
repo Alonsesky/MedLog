@@ -62,7 +62,14 @@ export class RegisterMedicalComponent  implements OnInit {
     const { date, evolution, namePatient, nameProfessional, emailPatient } =this.form.value;
     const normalizedEmailPatient = emailPatient?.trim();
     // Obtener el paciente por email
-    const patient = await this.evolutionService.getPatientByEmail(normalizedEmailPatient!);
+    let patient;
+    try{
+      patient = await this.evolutionService.getPatientByEmail(normalizedEmailPatient!);
+    } catch (error) {
+      await this.toastService.showToast(`${error}`, 3000);
+      return;
+    }
+
     // Crear el objeto de datos a guardar
     const data: Evolution = {
       date:date!,
